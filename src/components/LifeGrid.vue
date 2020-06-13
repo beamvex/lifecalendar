@@ -77,6 +77,62 @@
   color: darkgreen;
 }
 
+.hover-item.range1 {
+  border: 1px rgb(77, 223, 121);
+  margin-bottom: 2px;
+  background-color: rgb(77, 223, 121);
+  color: rgb(77, 223, 121);
+}
+
+.hover-item.range2 {
+  border: 1px rgb(77, 223, 121);
+  margin-bottom: 2px;
+  background-color: rgb(77, 223, 121);
+  color: rgb(77, 223, 121);
+}
+
+.hover-item.range3 {
+  border: 1px rgb(77, 223, 191);
+  margin-bottom: 2px;
+  background-color: rgb(77, 223, 191);
+  color: rgb(77, 223, 191);
+}
+
+.hover-item.range4 {
+  border: 1px rgb(77, 145, 223);
+  margin-bottom: 2px;
+  background-color: rgb(77, 145, 223);
+  color: rgb(77, 145, 223);
+}
+
+.hover-item.range5 {
+  border: 1px rgb(204, 218, 10);
+  margin-bottom: 2px;
+  background-color: rgb(204, 218, 10);
+  color: rgb(204, 218, 10);
+}
+
+.hover-item.range6 {
+  border: 1px rgb(190, 108, 0);
+  margin-bottom: 2px;
+  background-color: rgb(190, 108, 0);
+  color: rgb(190, 108, 0);
+}
+
+.hover-item.range7 {
+  border: 1px rgb(190, 0, 0);
+  margin-bottom: 2px;
+  background-color: rgb(179, 0, 0);
+  color: rgb(179, 2, 2);
+}
+
+.hover-item.range8 {
+  border: 1px green solid;
+  margin-bottom: 2px;
+  background-color: darkred;
+  color: darkred;
+}
+
 .hover-item:hover {
   background-color: #000;
   color: #000;
@@ -105,14 +161,14 @@ export default {
       this.weekDate = col.begindate.format("Do MMM YYYY");
       this.weekEndDate = col.enddate.format("Do MMM YYYY");
       this.clazz = col.clazz;
-      this.age = col.duration.get('years') ;
+      this.age = col.age;
       this.$emit("mouseAction", this.x, this.y);
     },
-    buildItems: () => {
+    buildItems: (date) => {
       var items = [];
 
       var today = moment();
-      var dob = moment(new Date("1976-07-22"));
+      var dob = moment(date);
       var begin = dob.clone();
       var birthday = dob.clone();
       var w = 0;
@@ -126,7 +182,9 @@ export default {
 
           birthday = birthday.year(begindate.year());
 
-          var duration = moment.duration(enddate.diff(dob))          
+          var duration = moment.duration(enddate.diff(dob))    
+          
+          var age = duration.get('years');
 
           var clazz = "hover-item";
           if (begindate.isSameOrBefore(birthday) && enddate.isSameOrAfter(birthday)) {
@@ -138,6 +196,8 @@ export default {
               } else {
                 clazz += " used";
               }
+            } else {
+              clazz += " range" + Math.floor(age / 10);
             }
           }
 
@@ -146,7 +206,8 @@ export default {
             begindate,
             enddate,
             clazz,
-            duration
+            duration,
+            age
           });
 
           w++;
@@ -164,20 +225,27 @@ export default {
       return items;
     }
   },
+  props: ['value'],
   data: () => ({
     items: [],
     selected: null,
     x: 0,
     y: 0,
     stly: "left: 0px; top: 0px;",
+    week: null,
     weekDate: null,
     weekEndDate: null,
     clazz: null,
     age: null
   }),
   mounted() {
-    this.items = this.buildItems();
-    console.log("did this, did thaT");
+    this.items = this.buildItems();    
+  },
+  watch: {
+    value(val) {
+      
+      this.items = this.buildItems(val);  
+    }
   }
 };
 </script>
