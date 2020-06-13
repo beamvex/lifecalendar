@@ -75,8 +75,7 @@ export default {
       this.x = x;
       this.y = y;
     },
-    changed(evt) {
-      console.log('input', evt);
+    changed(evt) {      
       if (!evt) {
         this.gridDate = this.date;
       }
